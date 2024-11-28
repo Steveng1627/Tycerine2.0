@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tycerine 2.0</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-left">
+            <h1>Tycerine 2.0</h1>
+            
+            <div class="game-board-container">
+                <div class="col-coordinates">
+                    <div class="col-coordinate">A</div>
+                    <div class="col-coordinate">B</div>
+                    <div class="col-coordinate">C</div>
+                    <div class="col-coordinate">D</div>
+                    <div class="col-coordinate">E</div>
+                    <div class="col-coordinate">F</div>
+                    <div class="col-coordinate">G</div>
+                </div>
+                
+                <div class="coordinates row-coordinates">
+                    <div class="row-coordinate">1</div>
+                    <div class="row-coordinate">2</div>
+                    <div class="row-coordinate">3</div>
+                    <div class="row-coordinate">4</div>
+                    <div class="row-coordinate">5</div>
+                    <div class="row-coordinate">6</div>
+                    <div class="row-coordinate">7</div>
+                    <div class="row-coordinate">8</div>
+                    <div class="row-coordinate">9</div>
+                </div>
+                
+                <div class="game-board" id="board"></div>
+            </div>
+
+            <div class="game-status">
+                <span id="turn-indicator">X's turn</span>
+            </div>
+            
+            <div class="game-controls">
+                <button id="fusion">合成</button>
+                <button id="undo">撤销</button>
+                <button id="forfeit">认输</button>
+                <button id="new-game">新游戏</button>
+            </div>
+            
+            <div class="menu-buttons">
+                <button id="credits">作者</button>
+                <button id="create-room">创建房间</button>
+                <button id="join-room">加入房间</button>
+            </div>
+        </div>
+        
+        <div class="game-log" id="gameLog">
+            <h3>游戏日志</h3>
+            <div id="logEntries"></div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+    <!-- 添加模态框 -->
+    <div id="creditsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>特别鸣谢</h2>
+            <p>游戏设计：</p>
+            <p>Chan Wen Xu (@chanbakjsd)</p>
+            <p>Fong Tzyy Yu (@xanderapple)</p>
+            <p>Ng Wei Enn (@yidongmuhe)</p>
+            <hr>
+            <p>代码：</p>
+            <p>Ng Wei Enn (@yidongmuhe)</p>
+            <hr>
+            <p>灵感来源：</p>
+            <p>郁闷的坤中生涯(kchs)</p>
+        </div>
+    </div>
+    <!-- 添加房间输入框 -->
+    <div id="roomModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeRoomModal">&times;</span>
+            <h2>房间管理</h2>
+            <div>
+                <button id="createRoomBtn">创建房间</button>
+                <p>房间号码: <span id="roomNumber"></span></p>
+            </div>
+            <div>
+                <input type="text" id="roomInput" placeholder="输入房间号码" />
+                <button id="joinRoomBtn">加入房间</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

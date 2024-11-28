@@ -1,0 +1,474 @@
+/* 添加响应式设计 */
+:root {
+    --board-size: min(80vw, 450px); /* 棋盘的基准大小，根据视窗宽度自适应 */
+    --cell-size: calc(var(--board-size) / 7); /* 每个格子的大小 */
+}
+
+/* 调整整体布局 */
+body {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    flex-wrap: wrap; /* 允许在小屏幕上换行 */
+}
+
+.game-board-container {
+    position: relative;
+    margin: 20px auto;
+    width: var(--board-size);
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 1px;
+    margin: 0;
+    width: var(--board-size);
+    height: calc(var(--board-size) * 1.3);
+    border: 1px solid #666;
+}
+
+.cell {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: 1px solid #666;
+    margin: 0;
+    padding: 0;
+    background-color: #808080;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s; /* 添加过渡效果 */
+}
+
+.cell.active {
+    background-color: #f0f0f0;
+}
+
+/* 基础棋子样式 */
+.piece {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+}
+
+/* Pawn 样式 */
+.piece.pawn {
+    border-radius: 50%;
+    border: 2px solid #000;
+}
+
+.piece.pawn.player-x {
+    background-color: #4444ff;
+}
+
+.piece.pawn.player-o {
+    background-color: #ff4444;
+}
+
+/* Defender 样式 */
+.piece.defender {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    border: 2px solid #000;
+}
+
+.piece.defender.player-x {
+    background-color: #2222dd;
+}
+
+.piece.defender.player-o {
+    background-color: #dd2222;
+}
+
+/* Hopper 样式 */
+.piece.hopper {
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    border: 2px solid #000;
+}
+
+.piece.hopper.player-x {
+    background-color: #0000cc;
+}
+
+.piece.hopper.player-o {
+    background-color: #cc0000;
+}
+
+/* 堡垒样式 */
+.piece.fortress {
+    clip-path: polygon(
+        20% 100%,  /* 左底角 */
+        20% 60%,   /* 左边缘1 */
+        0% 60%,    /* 左尖1外 */
+        20% 40%,   /* 左尖1内 */
+        35% 60%,   /* 左尖2外 */
+        50% 40%,   /* 中尖内 */
+        65% 60%,   /* 右尖2外 */
+        80% 40%,   /* 右尖1内 */
+        100% 60%,  /* 右尖1外 */
+        80% 60%,   /* 右边缘1 */
+        80% 100%   /* 右底角 */
+    );
+    border: 3px solid #000;  /* 加粗边框 */
+}
+
+.piece.fortress.player-x {
+    background-color: #4444ff;
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);  /* 添加蓝色光晕 */
+}
+
+.piece.fortress.player-o {
+    background-color: #ff4444;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);  /* 添加红色光晕 */
+}
+
+.game-controls, .menu-buttons {
+    margin: 20px 0;
+}
+
+button {
+    margin: 0 10px;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* 坐标样式 */
+.coordinates {
+    position: absolute;
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.col-coordinate {
+    top: 0;
+    transform: translateY(-20px);
+    width: 50px;
+    text-align: center;
+}
+
+.row-coordinate {
+    left: 0;
+    transform: translateX(-20px);
+    height: 50px;
+    line-height: 50px;
+}
+
+/* 修改坐标容器样式 */
+.col-coordinates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    width: var(--board-size);
+    margin: 0;
+    height: 25px;
+    padding: 0;
+}
+
+.col-coordinate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-coordinates {
+    display: grid;
+    grid-template-rows: repeat(9, 1fr);
+    position: absolute;
+    left: -25px;
+    top: 0;
+    height: calc(var(--board-size) * 1.3);
+    margin: 0;
+    padding: 0;
+}
+
+.row-coordinate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+}
+
+/* 添加日志样式 */
+.game-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.game-left {
+    flex: 0 0 auto;
+}
+
+.game-log {
+    flex: 0 0 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    height: auto;
+    max-height: 650px;
+}
+
+.game-log h3 {
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+#logEntries {
+    height: auto;
+    overflow-y: hidden;
+    padding-right: 10px;
+}
+
+.log-entry {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    transition: background-color 0.3s; /* 添加过渡效果 */
+    animation: slideIn 0.3s ease-out;
+}
+
+.log-entry:hover {
+    background-color: #e0e0e0; /* 悬停效果 */
+}
+
+.log-entry.player-x {
+    color: #4444ff;
+}
+
+.log-entry.player-o {
+    color: #ff4444;
+}
+
+.log-entry.battle {
+    color: #ff8c00;
+    font-weight: bold;
+}
+.removed-marker {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.removed-marker.player-x {
+    background-color: #4444ff;
+}
+
+.removed-marker.player-o {
+    background-color: #ff4444;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none; /* 默认隐藏 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* 更深的半透明背景 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 15px; /* 圆角 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* 阴影效果 */
+    width: 80%; /* 宽度 */
+    max-width: 500px; /* 最大宽度 */
+    text-align: center; /* 中心对齐 */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333; /* 标题颜色 */
+    font-size: 24px; /* 增加标题字体大小 */
+}
+
+p {
+    margin: 10px 0;
+    color: #555; /* 文本颜色 */
+    font-size: 18px; /* 增加文本字体大小 */
+}
+
+/* 添加分隔线 */
+hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.game-status {
+    text-align: center;
+    margin-top: 10px; /* 增加顶部间距 */
+    font-size: 18px; /* 增加字体大小 */
+    font-weight: bold; /* 加粗字体 */
+}
+
+/* 房间管理模态框样式 */
+#roomModal {
+    display: none; /* 默认隐藏 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* 更深的半透明背景 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 15px; /* 圆角 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* 阴影效果 */
+    width: 80%; /* 宽度 */
+    max-width: 500px; /* 最大宽度 */
+    text-align: center; /* 中心对齐 */
+}
+
+#roomInput {
+    margin-top: 10px;
+    padding: 10px;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* 调整日志面板 */
+.game-log {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    height: calc(var(--board-size) * 1.3);
+    overflow-y: auto;
+}
+
+/* 响应式布局调整 */
+@media screen and (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .game-log {
+        width: 100%;
+        max-width: var(--board-size);
+        height: 200px;
+    }
+
+    .game-controls, .menu-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    button {
+        margin: 5px;
+        flex: 1;
+        min-width: 100px;
+    }
+}
+
+/* 调整模态框在移动设备上的显示 */
+@media screen and (max-width: 480px) {
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    #roomInput {
+        width: 90%;
+    }
+}
+
+/* 保持其他样式不变，但添加响应式单位 */
+.piece {
+    width: 80%;
+    height: 80%;
+}
+
+.coordinates {
+    font-size: clamp(12px, 2vw, 14px);
+}
+
+/* 确保棋子在小屏幕上仍然清晰可见 */
+.piece.pawn, .piece.defender, .piece.hopper, .piece.fortress {
+    border-width: min(2px, 0.5vw);
+}
+
+/* 调整按钮大小 */
+button {
+    padding: clamp(6px, 1.5vw, 12px) clamp(12px, 3vw, 24px);
+    font-size: clamp(14px, 2vw, 16px);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+ 

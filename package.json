@@ -1,0 +1,17 @@
+{
+  "name": "tycerine",
+  "version": "1.0.0",
+  "description": "A strategic board game.",
+  "main": "game.js",
+  "scripts": {
+    "start": "http-server .",
+    "dev": "live-server ."
+  },
+  "keywords": [],
+  "author": "yidongmuhe",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.0"
+  }
+}
