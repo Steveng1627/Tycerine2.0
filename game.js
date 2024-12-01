@@ -255,7 +255,7 @@ class TycerineGame {
                     const shouldFuse = confirm('可以合成 Defender，是否立即合成？');
                     if (shouldFuse) {
                         // 在当前位置合成Defender
-                        this.fuseToHopper(row, col, row, col);
+                        this.fuseToDefender(row, col, row, col);
                         fusionExecuted = true;
                     }
                 }
