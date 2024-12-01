@@ -5,10 +5,10 @@ class TycerineGame {
         this.moveHistory = [];
         this.PIECE_TYPES = {
             PAWN: { name: 'Pawn', ap: 1, dp: 1 },
-            DEFENDER: { name: 'Defender', ap: 2, dp: 4 },
-            HOPPER: { name: 'Hopper', ap: 3, dp: 3 },
-            FORTRESS_X: { name: 'Fortress_X', ap: 3, dp: 3, symbol: '✱' },
-            FORTRESS_O: { name: 'Fortress_O', ap: 3, dp: 3, symbol: '⊕' }
+            DEFENDER: { name: 'Defender', ap: 1, dp: 3 },
+            HOPPER: { name: 'Hopper', ap: 5, dp: 3 },
+            FORTRESS_X: { name: 'Fortress_X', ap: 3, dp: 3 },
+            FORTRESS_O: { name: 'Fortress_O', ap: 3, dp: 3 }
         };
         this.fusionMode = false;
         this.selectedPiece = null;
@@ -254,17 +254,12 @@ class TycerineGame {
                 if (this.checkDefenderFusion(row, col)) {
                     const shouldFuse = confirm('可以合成 Defender，是否立即合成？');
                     if (shouldFuse) {
-                        // 使用记录的合成中心点
-                        this.fuseToDefender(
-                            this.fusionCenter.row,
-                            this.fusionCenter.col,
-                            this.fusionCenter.row,
-                            this.fusionCenter.col
-                        );
+                        // 在当前位置合成Defender
+                        this.fuseToHopper(row, col, row, col);
                         fusionExecuted = true;
                     }
                 }
-                if (!fusionExecuted && this.checkHopperFusion(row, col)) {
+                if (this.checkHopperFusion(row, col)) {
                     const shouldFuse = confirm('可以合成 Hopper，是否立即合成？');
                     if (shouldFuse) {
                         // 在当前位置合成Hopper
